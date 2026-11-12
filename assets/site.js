@@ -80,6 +80,97 @@
     apply();
   }
 
+  /* Quick check (quiz): 5 answers -> suggested programmes. Static texts only, built with textContent. */
+  var quiz = document.getElementById('quiz');
+  if (quiz) {
+    var it = document.documentElement.lang !== 'en';
+    var T = it ? {
+      title: 'Programmi da valutare per la tua impresa',
+      noItaly: 'Al momento lavoriamo solo con imprese registrate in Italia.',
+      noItalyText: 'Se stai aprendo una società in Italia, scrivici comunque: ti diciamo cosa serve per partecipare.',
+      idea: 'Anche un’idea va bene: la strutturiamo insieme in base ai requisiti del bando.',
+      cofin: 'Molti bandi richiedono un cofinanziamento: ne parliamo nella verifica gratuita.',
+      big: 'Per le grandi imprese i programmi diretti passano quasi sempre da progetti in partenariato.',
+      cta: 'Richiedi la verifica gratuita', all: 'Vedi tutti i programmi',
+      note: 'Orientamento indicativo: la verifica gratuita conferma requisiti, bandi aperti e scadenze.',
+      summary: 'Verifica rapida dal sito', areaL: 'Ambito', typeL: 'Tipo', progL: 'Programmi suggeriti',
+      area: { innov: 'innovazione e tecnologia', green: 'ambiente ed energia', digit: 'digitale', cult: 'cultura e creatività' },
+      type: { startup: 'startup', pmi: 'PMI', grande: 'grande impresa' },
+      p: {
+        eic: ['EIC Accelerator', 'Innovazioni ad alto impatto di startup e PMI, anche senza partner.'],
+        horizon: ['Horizon Europe', 'Progetti di innovazione con partner europei.'],
+        life: ['LIFE', 'Ambiente, clima ed economia circolare.'],
+        digital: ['Digital Europe', 'Intelligenza artificiale, dati e cybersecurity.'],
+        creative: ['Creative Europe', 'Cultura, media e creatività, in partenariato.']
+      }
+    } : {
+      title: 'Programmes worth checking for your company',
+      noItaly: 'For now we only work with companies registered in Italy.',
+      noItalyText: 'If you are setting up a company in Italy, write to us anyway: we’ll tell you what you need to apply.',
+      idea: 'An idea is fine too: we shape it together around the requirements of the call.',
+      cofin: 'Many calls require co-financing: we discuss it in the free check.',
+      big: 'For large companies, direct programmes almost always mean projects in partnership.',
+      cta: 'Request your free check', all: 'See all programmes',
+      note: 'Indicative guidance: the free check confirms eligibility, open calls and deadlines.',
+      summary: 'Quick check from the website', areaL: 'Field', typeL: 'Type', progL: 'Suggested programmes',
+      area: { innov: 'innovation and technology', green: 'environment and energy', digit: 'digital', cult: 'culture and creativity' },
+      type: { startup: 'startup', pmi: 'SME', grande: 'large company' },
+      p: {
+        eic: ['EIC Accelerator', 'High-impact innovation by startups and SMEs, no partners needed.'],
+        horizon: ['Horizon Europe', 'Innovation projects with European partners.'],
+        life: ['LIFE', 'Environment, climate and circular economy.'],
+        digital: ['Digital Europe', 'Artificial intelligence, data and cybersecurity.'],
+        creative: ['Creative Europe', 'Culture, media and creativity, in partnership.']
+      }
+    };
+    var res = document.getElementById('quiz-res');
+    var qerr = document.getElementById('quiz-err');
+    var el = function (tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; };
+    var val = function (name) { var c = quiz.querySelector('input[name="' + name + '"]:checked'); return c ? c.value : null; };
+
+    quiz.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var a = { q1: val('q1'), q2: val('q2'), q3: val('q3'), q4: val('q4'), q5: val('q5') };
+      if (!a.q1 || !a.q2 || !a.q3 || !a.q4 || !a.q5) { qerr.hidden = false; return; }
+      qerr.hidden = true;
+      while (res.firstChild) res.removeChild(res.firstChild);
+
+      var progs = [];
+      if (a.q1 !== 'no') {
+        if (a.q3 === 'innov') { if (a.q4 !== 'grande') progs.push('eic'); progs.push('horizon'); }
+        if (a.q3 === 'green') { progs.push('life', 'horizon'); }
+        if (a.q3 === 'digit') { progs.push('digital', 'horizon'); }
+        if (a.q3 === 'cult') { progs.push('creative'); }
+        res.appendChild(el('h3', '', T.title));
+        var ul = el('ul');
+        progs.forEach(function (k) { var li = el('li'); var d = el('div'); d.appendChild(el('b', '', T.p[k][0])); d.appendChild(el('span', '', T.p[k][1])); li.appendChild(d); ul.appendChild(li); });
+        res.appendChild(ul);
+        if (a.q2 === 'idea') res.appendChild(el('p', 'muted', T.idea));
+        if (a.q4 === 'grande') res.appendChild(el('p', 'muted', T.big));
+        if (a.q5 === 'nonso') res.appendChild(el('p', 'muted', T.cofin));
+      } else {
+        res.appendChild(el('h3', '', T.noItaly));
+        res.appendChild(el('p', 'muted', T.noItalyText));
+      }
+      var row = el('div', 'cta-row');
+      var go = el('a', 'btn', T.cta); go.href = '#' + quiz.dataset.contact;
+      go.addEventListener('click', function () {
+        var ta = document.getElementById('f-project');
+        if (ta && !ta.value.trim()) {
+          ta.value = T.summary + '\n' + T.areaL + ': ' + T.area[a.q3] + '\n' + T.typeL + ': ' + T.type[a.q4] +
+            (progs.length ? '\n' + T.progL + ': ' + progs.map(function (k) { return T.p[k][0]; }).join(', ') : '') + '\n\n';
+        }
+      });
+      row.appendChild(go);
+      var all = el('a', '', T.all); all.href = quiz.dataset.catalog; row.appendChild(all);
+      res.appendChild(row);
+      res.appendChild(el('p', 'muted', T.note));
+      res.hidden = false;
+      res.focus({ preventScroll: true });
+      res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  }
+
   /* Lead form: validates, then opens the visitor's email app with a prefilled message.
      Nothing is sent to or stored on this website. */
   var form = document.getElementById('lead-form');

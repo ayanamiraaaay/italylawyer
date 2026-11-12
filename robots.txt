@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ayanamiraaaay.github.io/italylawyer/sitemap.xml
