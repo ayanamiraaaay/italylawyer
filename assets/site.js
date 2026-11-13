@@ -22,7 +22,7 @@
   var mcta = document.querySelector('.mcta');
   if (mcta && 'IntersectionObserver' in window) {
     var top = document.querySelector('.hero, .page-hero');
-    var contact = document.getElementById('contatto') || document.getElementById('contact');
+    var contact = document.querySelector('#lead-form, .next');
     var pastTop = !top, atContact = false;
     var update = function () { mcta.classList.toggle('show', pastTop && !atContact); };
     if (top) new IntersectionObserver(function (e) { pastTop = !e[0].isIntersecting; update(); }).observe(top);
@@ -153,14 +153,9 @@
         res.appendChild(el('p', 'muted', T.noItalyText));
       }
       var row = el('div', 'cta-row');
-      var go = el('a', 'btn', T.cta); go.href = '#' + quiz.dataset.contact;
-      go.addEventListener('click', function () {
-        var ta = document.getElementById('f-project');
-        if (ta && !ta.value.trim()) {
-          ta.value = T.summary + '\n' + T.areaL + ': ' + T.area[a.q3] + '\n' + T.typeL + ': ' + T.type[a.q4] +
-            (progs.length ? '\n' + T.progL + ': ' + progs.map(function (k) { return T.p[k][0]; }).join(', ') : '') + '\n\n';
-        }
-      });
+      // The contact form lives on its own page: pass the suggested programmes in the URL (?p=...)
+      var go = el('a', 'btn', T.cta);
+      go.href = quiz.dataset.contact + (progs.length ? '?p=' + encodeURIComponent(progs.map(function (k) { return T.p[k][0]; }).join(', ')) : '');
       row.appendChild(go);
       var all = el('a', '', T.all); all.href = quiz.dataset.catalog; row.appendChild(all);
       res.appendChild(row);
@@ -182,7 +177,7 @@
     try {
       var p = new URLSearchParams(window.location.search).get('p');
       if (p && project && !project.value) {
-        p = p.replace(/[^\w\s+.\-]/g, '').slice(0, 60);
+        p = p.replace(/[^\w\s+.,\-]/g, '').slice(0, 120);
         if (p) project.value = d.prefill + ' ' + p + '\n';
       }
     } catch (e) { /* old browser: no prefill */ }
