@@ -6,16 +6,15 @@
   var menuBtn = document.querySelector('.menu-btn');
   var nav = document.getElementById('nav');
   if (menuBtn && nav) {
-    menuBtn.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
+    var setMenu = function (open) {
+      nav.classList.toggle('open', open);
+      document.body.classList.toggle('menu-open', open);
       menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') {
-        nav.classList.remove('open');
-        menuBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
+    };
+    menuBtn.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
+    nav.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); menuBtn.focus(); } });
+    window.addEventListener('resize', function () { if (window.innerWidth > 960 && nav.classList.contains('open')) setMenu(false); });
   }
 
   /* Mobile sticky CTA: show after the first screen, hide while the contact form is visible */
