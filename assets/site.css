@@ -318,6 +318,28 @@ p{margin:0}
 .box .h3::before{content:"";width:20px;height:3px;border-radius:3px;background:var(--amber);flex:none}
 .box.warn .h3::before{background:var(--line2)}
 @media (min-width:1100px){.page-hero::before{display:block}}
+
+/* ---------- home: richer story (about teaser, direct funds, pricing, faq) ---------- */
+.more{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--navy);text-decoration:none;align-self:flex-start;min-height:44px}
+.more::after{content:"→";transition:transform .15s}
+.more:hover{color:var(--navy);text-decoration:underline;text-underline-offset:4px}
+.more:hover::after{transform:translateX(3px)}
+.fd-grid{align-items:start}
+.fd-list{display:flex;flex-direction:column}
+.fd{display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.fd:first-child{padding-top:0}
+.fd:last-child{border-bottom:0}
+.fd-n{width:48px;height:48px;border-radius:14px;background:var(--amber-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font:800 18px var(--head)}
+.fd p{color:var(--muted);font-size:17px;margin-top:4px}
+.fit{background:var(--bg);border-radius:24px;padding:28px;display:flex;flex-direction:column;gap:16px}
+.fit-l{font-size:15px;font-weight:600;color:var(--muted);margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;background:#fff;border:1.5px solid var(--line);font-size:15px;font-weight:600;text-decoration:none;color:var(--navy)}
+.chip:hover{border-color:var(--navy)}
+.sm-stack{gap:16px}
+.faq-home{grid-template-columns:minmax(0,4fr) minmax(0,7fr);align-items:start}
+.faq-home .head{position:sticky;top:96px}
+
 @media (max-width:1120px){.nav a{padding:8px 9px;font-size:15px}}
 @media (max-width:960px){
   .next-box::before,.next-box::after{right:-40px;opacity:.6}
@@ -342,6 +364,8 @@ p{margin:0}
   .quiz-wrap{grid-template-columns:minmax(0,1fr);gap:24px}
   .quiz-res{grid-column:1}
   .contact-grid .form{order:-1}
+  .faq-home{grid-template-columns:minmax(0,1fr);gap:24px}
+  .faq-home .head{position:static}
   .page-hero .ph-grid{grid-template-columns:minmax(0,1fr);gap:28px}
   .cat-side{position:static}
   .mcta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .25s ease;visibility:hidden}
@@ -477,6 +501,18 @@ p{margin:0}
   .opt input:checked+span::before{border-color:#fff;background:radial-gradient(var(--amber) 0 4px,#fff 4.5px)}
   .quiz-foot .btn{width:100%}
   .quiz-res{padding:18px;border-radius:20px}
+
+
+  /* home story blocks */
+  .fd{grid-template-columns:40px minmax(0,1fr);gap:14px;padding:14px 0}
+  .fd-n{width:40px;height:40px;border-radius:12px;font-size:16px}
+  .fd .h3{font-size:17px}
+  .fd p{font-size:15px}
+  .fit{padding:20px;border-radius:20px;gap:14px}
+  .fit .cta-row{flex-direction:column;align-items:stretch}
+  .fit .more{align-self:center}
+  .chip{min-height:38px;font-size:14px;padding:0 12px}
+  .g2{gap:24px}
 
   /* closing call to action */
   .next{padding:0 0 48px}
